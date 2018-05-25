@@ -1,0 +1,11 @@
+logging:
+#日志配置部分
+   file: /home/logs/bandaotixi/bandaotixi.log
+   level:
+       root: info
+       com.*.mapper: debug
+spring:
+   datasource:
+       url: jdbc:mysql://localhost:3306/dbdemo
+       username: root
+       password: 1234
