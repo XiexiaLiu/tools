@@ -1,0 +1,65 @@
+/*
+ * @copyright 2014-2017 Future-data Inc. All rights reserved.
+ */
+
+package com.futuredata.base.web.service.system;
+
+import com.futuredata.base.web.model.system.User;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 用户业务接口.
+ *
+ */
+public interface UserService {
+
+  /**
+   * 添加用户.
+   * 
+   * @param user用户
+   * @return 新添加的用户
+   */
+  User addUser(User user);
+
+  /**
+   * 查看用户详情.
+   * 
+   * @param id 用户id
+   * @return 用户user
+   */
+  User getUserById(String id);
+
+  /**
+   * 修改用户.
+   * 
+   * @param user 用户
+   */
+  void updateUserById(User user);
+
+  /**
+   * 删除指定用户.
+   * 
+   * @param userId 用户id
+   */
+  void delUserById(String userId);
+
+  /**
+   * 批量删除指定用户.
+   * 
+   * @param userIds 用户id集合
+   */
+  void delUserByIds(List<String> userIds);
+
+  /**
+   * 获取所有用户(分页).
+   * 
+   * @param start 开始记录数
+   * @param pageSize 每页记录数
+   * @param condition 检索条件
+   * @return 用户列表
+   */
+  List<Map<String, Object>> getUsers(int start, int pageSize, Map<String, Object> condition);
+
+}

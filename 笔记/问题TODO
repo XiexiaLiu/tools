@@ -1,0 +1,21 @@
+  问题TODO
+1.judge项目里TopicUploadMapper.xml中修改课题上报（id="editTopicUploadById"），27行至30行(有问题？)：
+  <if test="uploadId != null and uploadId != ''">
+    topic_rank = #{topicRank},
+    rank_remarks = #{rankRemarks}
+  </if>
+2.同名的课题 多个法院承担 则 点击相应课题就会弹出相同内容TODO
+data.courtId
+
+
+ 更改sql语句 添加左连接tb_topic_upload
+		select r.attachment_id as id,r.upload_id as uploadId, a.attachment_name as attachmentName,a.attachment_size as attachmentSize,r.report_flag as reportFlag
+        from tb_topic_result r
+        inner join tb_public_attachment a on(a.id=r.attachment_id)
+				LEFT JOIN tb_topic_upload u on(u.upload_id=r.upload_id)
+        where r.upload_id = '847018893225492480'
+				and u.court_id='341000'
+        order by r.report_flag desc
+		
+		
+3.projectExecute.js中149行 data.ownerId = $(this).attr("fileId");//注释掉

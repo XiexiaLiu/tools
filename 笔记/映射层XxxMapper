@@ -1,0 +1,68 @@
+/*
+ * @copyright 2014-2017 Future-data Inc. All rights reserved.
+ */
+
+package com.futuredata.base.web.mapper.system;
+
+import com.futuredata.base.web.model.system.Role;
+import com.futuredata.base.web.model.system.User;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * user映射 mapper接口.
+ */
+public interface UserMapper {
+
+  /**
+   * 新增用户.
+   * 
+   * @param user用户
+   * @return 受影响行数
+   */
+  int addUser(User user);
+
+  /**
+   * 查看用户详情.
+   * 
+   * @param 用户id
+   * @return 用户user
+   */
+  User getUserById(String id);
+
+  /**
+   * 修改用户.
+   * 
+   * @param user用户
+   * @return 受影响行数
+   */
+  int updateUserById(User user);
+
+  /**
+   * 删除指定用户.
+   * 
+   * @param 用户id
+   * @return 受影响行数
+   */
+  int delUserById(String userId);
+
+  /**
+   * 批量删除指定用户.
+   * 
+   * @param userIds 用户id集合
+   * @return 受影响行数
+   */
+  int delUserByIds(@Param(value = "userIds") List<String> userIds);
+
+  /**
+   * 获取所有用户.
+   * 
+   * @param condition 查询条件
+   * @return 用户集合
+   */
+  List<Map<String, Object>> getUsers(@Param(value = "map") Map<String, Object> condition);
+
+}

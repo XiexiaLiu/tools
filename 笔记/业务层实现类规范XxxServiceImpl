@@ -1,0 +1,125 @@
+/*
+ * @copyright 2014-2017 Future-data Inc. All rights reserved.
+ */
+
+package com.futuredata.base.web.service.system.impl;
+
+import com.futuredata.base.core.config.AppConfig;
+import com.futuredata.base.core.db.page.FdPageHelper;
+import com.futuredata.base.core.util.AppUtils;
+import com.futuredata.base.core.util.EncryptUtils;
+import com.futuredata.base.core.util.StringUtils;
+import com.futuredata.base.web.core.AppSession;
+import com.futuredata.base.web.mapper.system.UserMapper;
+import com.futuredata.base.web.model.system.User;
+import com.futuredata.base.web.service.system.UserService;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * 用户业务接口实现.
+ */
+@Service
+public class UserServiceImpl implements UserService {
+
+  @Autowired
+  private UserMapper userMapper;
+
+  /**
+   * 新增用户.
+   * 
+   * @param user 用户
+   * @return 新添加的用户
+   */
+  @Override
+  @Transactional
+  public User addUser(User user) {
+
+    // 获取当前用户
+    String currentUserId = AppSession.getCurrentUser().getUserId();
+
+    if (StringUtils.isEmpty(user.getUserId())) {
+      // 设置用户id
+      user.setUserId(AppUtils.randomUUID());
+    }
+
+    // 保存用户
+    userMapper.addUser(user);
+
+    return user;
+  }
+
+  /**
+   * 查看用户详情.
+   * 
+   * @param id 用户id
+   * @return 用户user
+   */
+  @Override
+  public User getUserById(String id) {
+    return userMapper.getUserById(id);
+  }
+
+  /**
+   * 修改用户.
+   * 
+   * @param user 用户
+   */
+  @Override
+  @Transactional
+  public void updateUserById(User user) {
+
+    // 更新用户的基本信息
+    userMapper.updateUserById(user);
+
+  }
+
+  /**
+   * 删除指定用户.
+   * 
+   * @param userId 用户id
+   */
+  @Override
+  @Transactional
+  public void delUserById(String userId) {
+    userMapper.delUserById(userId);
+  }
+
+  /**
+   * 批量删除指定用户.
+   * 
+   * @param userIds 用户id集合
+   */
+  @Override
+  @Transactional
+  public void delUserByIds(List<String> userIds) {
+    userMapper.delUserByIds(userIds);
+  }
+
+  /**
+   * 获取所有用户(分页).
+   * 
+   * @param start 开始记录数
+   * @param pageSize 每页记录数
+   * @param condition 检索条件
+   * @return 用户列表
+   */
+  @Override
+  public List<Map<String, Object>> getUsers(int start, int pageSize,
+      Map<String, Object> condition) {
+    FdPageHelper.start(start, pageSize);
+    // 数据权限控制权限验证, 当前用户只能操作自己及下级部门的数据
+    condition.put("departId", AppSession.getCurrentUserAuthDepart());
+
+    condition.put("loginName", AppSession.getCurrentUser().getLoginName());
+    return userMapper.getUsers(condition);
+  }
+
+}
