@@ -1,0 +1,178 @@
+/*
+ * @copyright 2014-2017 Future-data Inc. All rights reserved.
+ */
+
+package com.futuredata.base.web.controller.api.system;
+
+import com.futuredata.base.core.entity.DatatablesViewPage;
+import com.futuredata.base.core.entity.FdResponse;
+import com.futuredata.base.core.entity.MapWapper;
+import com.futuredata.base.core.util.AppUtils;
+import com.futuredata.base.web.annotation.RequestJsonParam;
+import com.futuredata.base.web.model.system.User;
+import com.futuredata.base.web.service.system.UserService;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+
+/**
+ * 用户数据api.
+ * 
+ * @author haichao.sang
+ */
+@Controller
+@RequestMapping("/api")
+public class UserApi {
+
+  @Resource
+  private UserService userService;
+
+  /**
+   * 新增用户.
+   * 
+   * @param user用户
+   * @return 新添加的user用户
+   */
+  @RequestMapping(value = "/user", method = RequestMethod.POST)
+  @ResponseBody
+  public FdResponse<User> addUser(@RequestBody User user) {
+
+    // 验证表单内容
+    AppUtils.validateModel(user);
+
+    // 新增用户
+    return new FdResponse<User>(HttpStatus.CREATED.value(), "用户创建成功", userService.addUser(user));
+  }
+
+  /**
+   * 获取用户详情.
+   * 
+   * @param id 用户id
+   */
+  @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+  @ResponseBody
+  public FdResponse<User> getUserById(@PathVariable("id") String id) {
+
+    // 获取用户详情
+    return new FdResponse<User>(HttpStatus.OK.value(), "查询成功", userService.getUserById(id));
+  }
+
+  /**
+   * 编辑用户.
+   * 
+   * @param id 用户id
+   * @param user 用户
+   */
+  @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
+  @ResponseBody
+  public FdResponse<User> updataUserById(@PathVariable("id") String id, @RequestBody User user) {
+
+    // 设置编号
+    user.setUserId(id);
+
+    // 验证表单内容
+    AppUtils.validateModel(user);
+
+    // 更新用户信息
+    userService.updateUserById(user);
+
+    return new FdResponse<User>(HttpStatus.OK.value(), "修改成功", user);
+  }
+
+  /**
+   * 删除用户.
+   * 
+   * @param userId 用户id
+   */
+  @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
+  @ResponseBody
+  public FdResponse<User> delUserById(@PathVariable("id") String userId) {
+
+    userService.delUserById(userId);
+
+    return new FdResponse<User>(HttpStatus.NO_CONTENT.value(), "删除成功");
+  }
+
+  /**
+   * 批量删除用户信息.
+   * 
+   * @param userIds 用户id集合
+   */
+  @RequestMapping(value = "/users/batch", method = RequestMethod.DELETE)
+  @ResponseBody
+  public FdResponse<List<User>> delUserByIds(
+      @RequestJsonParam(value = "ids", required = false) List<String> userIds) {
+
+    userService.delUserByIds(userIds);
+
+    return new FdResponse<List<User>>(HttpStatus.NO_CONTENT.value(), "删除成功");
+  }
+
+  /**
+   * 根据检索条件,对用户进行分页查询.
+   *
+   * @param start 开始记录数
+   * @param pageSize 每页记录数
+   * @param condition 检索条件
+   * @return 用户列表
+   */
+  @RequestMapping(value = "/users", method = RequestMethod.GET)
+  @ResponseBody
+  public FdResponse<DatatablesViewPage<Map<String, Object>>> getUsers(
+      @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+      @RequestParam(value = "length", required = false, defaultValue = "0") int pageSize,
+      @RequestJsonParam(value = "condition",
+          required = false) MapWapper<String, Object> condition) {
+
+    List<Map<String, Object>> users =
+        userService.getUsers(start, pageSize, condition.getInnerMap());
+    // 封装为分页信息
+    DatatablesViewPage<Map<String, Object>> page =
+        new DatatablesViewPage<Map<String, Object>>(users);
+
+    return new FdResponse<DatatablesViewPage<Map<String, Object>>>(HttpStatus.OK.value(),
+        "获取用户列表成功", page);
+  }
+
+  /**
+   * 列表下载.
+   * @param request 页面表单
+   * @param response 输出流
+   * @return 列表下载
+   */
+  @RequestMapping(value = "users/export", method = RequestMethod.GET)
+  @ResponseBody
+  public FdResponse<String> exportUsers(HttpServletRequest request,
+      HttpServletResponse response, @RequestJsonParam(value = "condition",
+      required = false) MapWapper<String, Object> condition) {
+
+    List<Map<String, Object>> datas = service.getUsers(0, 0, condition.getInnerMap());
+
+    String[] heads = {"序号", "课题类型", "课题", "申请法院", "承担法院", "状态", "备注"};
+    String[] headCodes =
+        {"no", "topicType", "topicName", "applyCourtName", "implCourtName", "reportDesc", "remark"};
+
+    int no = 1;
+    for (Map<String, Object> data : datas) {
+      data.put("no", no++);
+    }
+
+    if (ExcelUtil.createExcel(request, response, "课题实施", "课题实施", heads, headCodes, datas)) {
+      return new FdResponse<String>(HttpStatus.OK.value(), "课题实施列表下载成功");
+    }
+    return new FdResponse<String>(HttpStatus.OK.value(), "课题实施列表下载失败");
+  }
+}
