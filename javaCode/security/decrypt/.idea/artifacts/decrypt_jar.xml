@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="decrypt:jar">
+    <output-path>$PROJECT_DIR$/..</output-path>
+    <root id="archive" name="decrypt.jar">
+      <element id="module-output" name="decrypt" />
+      <element id="extracted-dir" path="$USER_HOME$/.m2/repository/com/alibaba/fastjson/1.2.44/fastjson-1.2.44.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
