@@ -1,0 +1,36 @@
+笔记2017-03-27
+1.MySQL insert into...select 插入数据到另一张表中（查询不能包含一个ORDER BY子句。多表一定要取别名）
+	eg1:insert into a(f1,f2) select f1,f2 from b #b表的f1,f2数据插入a表中
+	eg2:INSERT INTO a (field1,field2) SELECT * FROM(SELECT b.f1,c.f2 FROM b JOIN c) AS tb #b表的f1和c表的f2组合插入a表中
+2.MySQL中一些函数：
+  1）CONCAT('a','%') #字符串连接
+  2）NOW() #当前时间 如2012-09-23 06:48:28
+  3）length('abc') #字符串长度
+  4）DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%S') #格式化日期
+3.Java
+	1)List<> Arrays.asList(arr) #数组转集合list
+	2)org.apache.commons.lang.StringUtils.join(dataDepartIds.toArray(), ",") #数组中间用"，"隔开然后组成字符串
+	3)DecimalFormate(); #格式化数字
+		eg:
+		final double PI = 3.1415927; 
+		DecimalFormat formater = new DecimalFormat("####.00");
+		System.out.printf(formater.format(PI));
+	4)boolean endsWith(String suffix); #判断字符串是否以suffix结尾
+	5)clone(); #克隆引用（分浅复制和深克隆）
+	6)int compareTo(String anotherString); #比较两个字符串的字典。比较是基于字符串中的每个字符的Unicode值。
+	7)list.toArray(T[] a); #ArrayList提供将List转为数组
+	8)Pattern.compile(String regex).matcher(); #.matcher(String regex,CharSequence input)是一个静态方法,用于快速匹配字符串,适用于只匹配一次,且匹配全部字符串.
+	Matcher.matches()/ Matcher.lookingAt()/ Matcher.find(); #返回boolean类型,当匹配到时返回true
+
+4.前端html
+	<pre>标签：可定义预格式化的文本。被包围在 <pre> 标签 元素中的文本通常会保留空格和换行符。而文本也会呈现为等宽字体。
+5.工具使用
+	Maven工程
+	1)pom.xml报错：C:\Users\10918\Documents\GitHub\fd-base\target\classes\META-INF\MANIFEST.MF (系统找不到指定的路径。)
+	解决方法：选择project->clean->选中报错项目->确定 ok
+6.循环遍历map集合：
+	Map<String, String> mediationCaseStr = new HashMap<String, String>();
+	for (Map.Entry<String, Object> entry : mediation.entrySet()) {
+		mediationCaseStr.put(entry.getKey(), (String) entry.getValue());
+	}
+7.springMVC中new ResponseEntity<byte[]>(cases, headers, HttpStatus.OK);
