@@ -1,0 +1,115 @@
+<![CDATA[特殊字符]]>
+
+redis------------redis-server.exe redis.conf
+
+找到tomcat路径的conf下的server.xml，打开，将<Context>标签中加入一个属性：reloadable="false" 
+
+
+前端调用接口
+$.fd.ajax({
+
+	type : "get",
+	url : "api/elder/bedState",
+	data:{condition:{year:"2016",cityName:"高新区"}},
+	success : function(d) {
+		console.log(d.meta.message+"-------"+d.data.length);
+		$.each(d.data,function(index,obj){console.log(obj);})
+	
+}
+});
+
+js前端
+getSelections();//返回第一个被选中的行或如果没有选中的行这返回null。
+getSelected("id");//返回所有被选中的行，当没有记录被选中的时候将返回一个空数组。
+
+git使用
+$ git add
+$ git commit -m '注释'
+$ git pull 
+正常没报错才进行下一步！！！Already up-to-date
+$ git push(最关键)
+eg:git@192.168.0.211:/fd-court-cube.git
+-------------------------
+
+mysql的mapper.xml中，如果用#接收参数，可以做到防sql注入的功效。
+
+add 添加
+edit 修改
+del 删除
+get 获取（列表或对象）/get ById
+
+---core(uitls)
+---web包括
+Model 各种类
+--Controller 控制器(api 如xxxApi) 
+增/api/对象 FdResponse<对象>(){需要表单验证AppUtils.validateModel()};
+删/api/对象s/id或batch FdResponse<list对象>(@RequestJsonParam json-list);
+改/api/对象s/{id} FdResponse<对象>(id,对象);
+查/api/对象s FdResponse<DatatablesViewPage<Map<String, Object>>> getXxxsByPage(
+	@RequestParam(value="start",required=false,defaultValue="0")int start,
+	@RequestParam(value="length",required=false,defaultValue="0")int pageSize,
+	@RequestJsonParam(value="map",required=false)MapWapper<String, Object> condition){}
+--Service 业务层
+增 对象 addXxx(对象){用AppUtils.radomUUID()生成id};
+删void delXxx(id或ids);
+改void updXxx(对象);
+查List<Map<String, Object>> getXxxs(int start, int pageSize, Map<String, Object> map);
+
+--mapper 映射 dao接口 
+增int addXxx(对象);
+删int delXxx(id或List<>ids);
+改int updXxx(对象);
+查List<Map<String, Object>> getXxxs(Map<String,Object> map)
+xls 表对应的类
+
+
+F5单步调试 进入函数内部。 跳入
+F6单步调试 不进入函数内部。 跳出
+F7由函数内部 返回到调用处。 返回
+F8一直执行到 下一个断点。 下个
+F11 这个好像是重新运行debug的，我也不确定，一直就当做重新运行debug的快捷键用的。 重新
+
+
+分页com.github.pagehelper.Page和PageHelper 方法Page start（int start, int pageSize）
+
+spring mvc中的@PathVariable是用来获得请求url中的动态参数的
+@RequestParam(value = what required = true)
+void test(int what){};
+这个是传参  当他为false 时  使用这个注解可以不传这个参数  true时必须传
+required默认值是true.
+
+HttpStatus
+
+200 OK - [GET]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。
+201 CREATED - [POST/PUT/PATCH]：用户新建或修改数据成功。
+202 Accepted - [*]：表示一个请求已经进入后台排队（异步任务）
+204 NO CONTENT - [DELETE]：用户删除数据成功。
+400 INVALID REQUEST - [POST/PUT/PATCH]：用户发出的请求有错误，服务器没有进行新建或修改数据的操作，该操作是幂等的。
+401 Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。
+403 Forbidden - [*] 表示用户得到授权（与401错误相对），但是访问是被禁止的。
+404 NOT FOUND - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。
+406 Not Acceptable - [GET]：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。
+410 Gone -[GET]：用户请求的资源被永久删除，且不会再得到的。
+422 Unprocesable entity - [POST/PUT/PATCH] 当创建一个对象时，发生一个验证错误。
+500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。 【内部错误，可能空指针等逻辑错误。】
+
+
+
+GET（SELECT）：从服务器取出资源（一项或多项）。
+POST（CREATE）：在服务器新建一个资源。
+PUT（UPDATE）：在服务器更新资源（客户端提供改变后的完整资源）。
+PATCH（UPDATE）：在服务器更新资源（客户端提供改变的属性）。
+DELETE（DELETE）：从服务器删除资源。
+
+举例：GET /zoos/ID/animals：列出某个指定动物园的所有动物
+DELETE /zoos/ID/animals/ID：删除某个指定动物园的指定动物
+
+
+zTree前端jquery树插件
+
+HTTP Status 405 - Request method 'POST' not supported 是action路径最后以/结尾，搞了好久
+
+【prop和attr区别】
+对于HTML元素本身就带有的固有属性，在处理时，使用prop方法。
+对于HTML元素我们自己自定义的DOM属性，在处理时，使用attr方法。
+使用prop方法取值和设置属性值时，都会返回undefined值。
